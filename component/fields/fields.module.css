@@ -1,0 +1,14 @@
+.fields {
+    width: 97%; 
+}
+
+.image{
+    grid-column: 1/-2;
+    height: 80%;
+    margin: 6px;
+}
+
+.seperator{
+    grid-column: 1/-1;
+}
+

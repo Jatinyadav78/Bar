@@ -1,0 +1,95 @@
+/* components/Stepper.module.css */
+.stepperContainer{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.stepper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  gap: 10px;
+}
+
+.stepperResp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.stepperBlock {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.smallDot {
+  display: flex;
+  gap: 10px;
+  justify-content: space-evenly;
+  height: 32px;
+  align-items: flex-end;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background-color: #cccccc;
+  border-radius: 50%;
+}
+
+.step {
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* gap: 10px; */
+  height: 40px;
+  justify-content: space-between;
+}
+
+.bigDot {
+  width: 20px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 50%;
+}
+
+.title {
+  width: 200%;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.titleActive {
+  color: #007bff;
+}
+
+
+.active {
+  background-color: #007bff;
+}
+
+@media (max-width: 770px) {
+  .stepper {
+    display: none;
+  }
+}
+
+@media(min-width: 770px) {
+  .stepperResp {
+    display: none;
+  }
+}

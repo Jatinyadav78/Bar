@@ -1,0 +1,123 @@
+.requestPage {
+    min-width: 390px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(0deg, rgba(173, 173, 173, 0.08), rgba(173, 173, 173, 0.08)), #FFFFFF;
+}
+
+.searchBoxContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    margin: 20px 0px;
+    color: #595A5B99;
+    /* font-family: Inter; */
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24.2px;
+    text-align: left;
+    text-transform: capitalize;
+}
+
+.requestName {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search {
+    width: 250px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.search input {
+    height: 10px;
+}
+
+.request {
+    position: relative;
+    min-height: 80vh;
+    width: 95%;
+    border-radius: 15px;
+    background: #FFFFFF;
+    padding: 20px;
+    box-shadow: 0px 2px 4px 0px transparent;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    /* justify-content: space-between; */
+    /* flex-wrap: wrap; */
+}
+
+
+.buttonContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.buttonContainer button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 14px 8px 10px;
+    gap: 10px;
+    margin: 10px;
+    position: relative;
+    width: 25%;
+    height: 45px;
+    border-radius: 5px;
+}
+
+.cancelBtn {
+    background-color: white;
+    color: #0073FF;
+    border: 1px solid #0073FF;
+}
+
+.btnRejApv {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    min-width: 333px;
+}
+
+.rejectedBtn {
+    background-color: #FF0E56;
+    color: white;
+}
+
+.approvedBtn {
+    background-color: #16B961;
+    color: white;
+}
+
+@media(max-width:650px) {
+    .buttonContainer {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .cancelBtn {
+        min-width: 230px;
+    }
+
+    .btnRejApv {
+        justify-content: center;
+    }
+
+    .btnRejApv button {
+        min-width: 40%;
+    }
+
+}
+
+@media (max-width: 780px) {
+    .request{
+        min-height: 85vh;
+    }
+}

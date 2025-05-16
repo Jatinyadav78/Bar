@@ -1,0 +1,105 @@
+.navBody {
+    /* Top Bar */
+    position: relative;
+    width: 100%;
+    min-height: 78px;
+    left: 0px;
+    top: 0px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+    flex-wrap: wrap;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+}
+
+/*formName*/
+.formName {
+    /* Safety */
+    /* width: 240px; */
+    height: 45px;
+    /* font-family: 'Inter'; */
+    font-style: normal;
+    font-weight: 900;
+    font-size: 37.166px;
+    line-height: 45px;
+    /* identical to box height */
+    position: relative;
+    left: 5%;
+    color: #0073FF;
+    margin-right: 35px;
+    cursor: pointer;
+}
+
+.calenderDate {
+    /* Frame 478 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 4px;
+    width: 235px;
+    height: 30px;
+    margin-left: 20px;
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+
+
+}
+
+/* calender */
+.calenderIcon {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    top: 4px;
+}
+
+.date {
+    width: 150px;
+    height: 14px;
+    white-space: nowrap;
+    /* font-family: 'Inter'; */
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+
+    /* Primary Text */
+    color: #3F4059;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.bigDot {
+    width: 20px;
+    height: 20px;
+    background-color: #060BB7;
+    border-radius: 50%;
+    order: 2;
+    margin-left: 6px;
+  }
+
+  @media(max-width: 450px){
+    .clock{
+        width: 100%;
+    }
+
+    .clock button{
+        position: relative;
+        bottom: 20px;
+    }
+
+    .formName{
+        font-size: 22px;
+    }
+  }

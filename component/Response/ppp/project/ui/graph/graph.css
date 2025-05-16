@@ -1,0 +1,10 @@
+/* .apexcharts-toolbar{
+    top: -35px !important;
+    right: 10px !important;
+} */
+
+.apexcharts-xaxis-label {
+    text-align: center;
+    word-wrap: break-word;
+    overflow: hidden;
+}

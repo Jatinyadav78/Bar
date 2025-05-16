@@ -1,0 +1,25 @@
+.accessDenied{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* color: white; */
+    }
+    .accessDenied code{
+        font-size: 1.875em;
+        color: red;
+    }
+    .accessDenied hr{
+        width: 50%;
+    }
+
+    .accessDenied h1 {
+    color: red;
+    }
+    
+   .accessDenied h6{
+    color: red;
+    text-decoration: underline;
+    }

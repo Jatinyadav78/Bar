@@ -1,0 +1,72 @@
+.status {
+    width: 90px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7.9px;
+    background: #ccc;
+}
+
+.status p {
+    font-size: 13px;
+    font-weight: 400;
+    color: #6d6868;
+    margin: 0px 10px;
+    text-transform: capitalize;
+}
+
+.activeStatus {
+    width: 90px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7.9px;
+    background: #d4ffe8;
+}
+
+.activeStatus p {
+    font-size: 13px;
+    font-weight: 400;
+    color: #04a04c;
+    margin: 0px 10px;
+    text-transform: capitalize;
+
+}
+
+.rejectedStatus {
+    width: 90px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7.9px;
+    background: #ffd9d8;
+}
+
+.rejectedStatus p {
+    font-size: 13px;
+    font-weight: 400;
+    color: #e11912;
+    margin: 0px 10px;
+    text-transform: capitalize;
+}
+
+.closedStatus{
+    width: 90px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7.9px;
+    background: #efd8ff;
+}
+
+.closedStatus p {
+     font-size: 13px;
+    font-weight: 400;
+    color: #b412e1;
+    margin: 0px 10px;
+    text-transform: capitalize;
+}

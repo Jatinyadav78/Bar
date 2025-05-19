@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Styles from './Sidebar.module.css';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
@@ -11,9 +12,8 @@ import { IconButton } from '@mui/material';
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
-  // const [isExpanded, setIsExpanded] = useState(false);
   const router = useRouter();
-  
+  const pathname = usePathname(); // Get current path
 
   const menuItems = [
     {
@@ -49,7 +49,7 @@ const Sidebar = () => {
         {menuItems.map((item, index) => (
           <div
             key={index}
-            className={Styles.menuItem}
+            className={`${Styles.menuItem} ${pathname === item.path ? Styles.active : ''}`}
             onClick={() => router.push(item.path)}
           >
             <div className={Styles.icon}>{item.icon}</div>

@@ -67,3 +67,9 @@
   height: 24px;
   object-fit: contain;
 } */
+
+/* Add this to Sidebar.module.css */
+.active {
+  background-color: #e6f0ff;
+  font-weight: bold;
+}

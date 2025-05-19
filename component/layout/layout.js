@@ -24,7 +24,6 @@ import React, { useState, useEffect } from 'react';
 import Nav from './navbar/navbar.js'
 import Sidebar from '../Sidebar/sidebar/Sidebar.js';
 import Styles from './layout.module.css'
-
 const Layout = ({children, formName}) => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
 

@@ -13,6 +13,7 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   // const [isExpanded, setIsExpanded] = useState(false);
   const router = useRouter();
+  
 
   const menuItems = [
     {
@@ -63,5 +64,3 @@ const Sidebar = () => {
 export default Sidebar;
 
 
-
-//i want to make the FIR dashboard button in the sidebar working , add the functionality to the button so that when clicked, it redirects to the FIR dashboard page.Which contains the same interface as the work permit dashboard page the request button becomes Report button . make a separate frontend for the FIR dashboard page and add the functionality to the button so that when clicked, it redirects to the FIR dashboard page. The FIR dashboard page should contain the same interface as the work permit dashboard page, but the request button should become a Report button.

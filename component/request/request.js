@@ -70,10 +70,3 @@ const Request = ({ data, handleOnClick, handleAddImage }) => {
 
 export default Request;
  
-
-// make side bar like the image uploaded and the side bar should be collapsible and the side bar should have the following options:
-// 1. Work Permit Dashboard - when clicked on it user will be re directed to the workpermit dashboard that is my main dashboard looks like in the 2nd image 
-// this code for work permit already exists as i have uploaded.
-// Now i am want two more dashboards the names are:
-// 2. Fir Dashboard - when user clicks on it user will be redirected to the fir dashboard that is my new dashboard that i will create and on that dashboard i will show the list of all the firs that are created by the user and the status of the firs.
-// 3. Safety audit Report Dashboard - when user clicks on it user will be redirected to the safety dashboard that is my new dashboard that i will create and on that dashboard i will show the list of all the safety requests that are created by the user and the status of the safety requests.

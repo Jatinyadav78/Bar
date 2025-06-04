@@ -5,8 +5,7 @@ import FormControl from '@mui/material/FormControl';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 import { formAction } from '../../../store/formSlice.js'
 import Box from '@mui/material/Box';
-import { Dropdown } from 'primereact/dropdown';
-import { SelectPicker, Stack } from 'rsuite';
+import { Autocomplete, TextField } from '@mui/material';
 
 const SingleSelect = ({ useForm, trigger, field, sectionName, name }) => {
     const { label, placeholder, isRequired, errorMessage, conditionalOptions, options = [] } = field;
@@ -24,9 +23,9 @@ const SingleSelect = ({ useForm, trigger, field, sectionName, name }) => {
         return questionObj?.answer;
     }, shallowEqual)
     // setValue(hookFormLabel,stateValue)
-    const handleChange = async (event) => {
+    const handleChange = async (event, newValue) => {
         const question = label;
-        const answer = event;
+        const answer = newValue;
         setValue(hookFormLabel, answer)
         errors[hookFormLabel] && await trigger(hookFormLabel)
         name ? dispatch(formAction.updateMatrixField({ name, sectionName, question, answer })) :
@@ -48,7 +47,7 @@ const SingleSelect = ({ useForm, trigger, field, sectionName, name }) => {
         // return [];
     }, shallowEqual)
 
-    const data = condOptions ? condOptions.map(item => ({ label: item, value: item })) : options?.map(item => ({ label: item, value: item }))
+    // const data = condOptions ? condOptions.map(item => ({ label: item, value: item })) : options?.map(item => ({ label: item, value: item }))
 
     useEffect(() => {
         setValue(hookFormLabel, stateValue);
@@ -59,70 +58,40 @@ const SingleSelect = ({ useForm, trigger, field, sectionName, name }) => {
             <InputLabel id="demo-select-small-label" style={{ width: '100%', position: 'relative', top: '6px', color: 'black', marginLeft: '11px' }} error={showError} required={isRequired}>{label}
             </InputLabel>
             <FormControl sx={{ fontSize: 14, width: '100%', margin: '10px' }} size='small' >
-                <div style={{ border: "1px solid rgba(0, 0, 0, 0.3)", borderRadius: '3px', height: '38px', width: '100%', color: 'grey' }}>
+                {/* <div style={{ border: "1px solid rgba(0, 0, 0, 0.3)", borderRadius: '3px', height: '38px', width: '100%', color: 'grey' }}> */}
 
-                    <Controller
-                        name={hookFormLabel}
-                        control={control}
-                        defaultValue={stateValue}
-                        rules={{
-                            required: isRequired && "Please select an option",
-                        }}
-                        render={({ field }) => (
-                            <SelectPicker
-                                {...field}
-                                id={hookFormLabel}
-                                data={data}
-                                value={field.value}
-                                onChange={(value) => {
-                                    field.onChange(value);
-                                    handleChange?.(value); // if you want to trigger your custom logic
-                                }}
-                                searchable={false}
-                                style={{ width: "100%" }}
-                                placeholder={label}
-                            />
-                        )}
-                    />
+                <Controller
+                    name={hookFormLabel}
+                    control={control}
+                    defaultValue={
+                        (condOptions ?? options)?.find(opt => opt.value === stateValue) || null
+                    }
+                    rules={{
+                        required: isRequired && "Please select an option",
+                    }}
+                    render={({ field }) => (
+                        <Autocomplete
+                            {...field}
+                            id={hookFormLabel}
+                            size='small'
+                            value={stateValue || null}
+                            options={condOptions ?? options}
+                            onChange={handleChange}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    size='small'
+                                />
+                            )}
+                        />
+                    )}
+                />
 
-                </div>
+
+                {/* </div> */}
                 {errors[hookFormLabel] && <FormHelperText error>{errors[hookFormLabel] ? errors[hookFormLabel].message : errorMsg}</FormHelperText>}
             </FormControl>
         </Box >
     )
 }
 export default SingleSelect;
-
-
-{/* <Box>
-<FormControl sx={{ fontSize: 14, width: '100%', margin: '10px' }} size='small' >
-    <InputLabel id="demo-select-small-label" error={errors[hookFormLabel] || errorMsg} required={isRequired}>{label}</InputLabel>
-    <Select
-        id={hookFormLabel}
-        {...register(`${hookFormLabel}`, {
-            required: isRequired && 'Please select an option',
-        })}
-        error={errors[hookFormLabel] || errorMsg}
-        label={label}
-        name={label}
-        value={stateValue}
-        onChange={handleChange}
-    >
-    {options.map((option) => (
-            <MenuItem key={option} value={option}>{option}</MenuItem>
-        ))}
-    </Select>
-    {errors[hookFormLabel] && <FormHelperText error>{errors[hookFormLabel] ? errors[hookFormLabel].message : errorMsg}</FormHelperText>}
-</FormControl>
-</Box > */}
-
-{/* <div style={{ margin: '10px', border: "1px solid rgba(0, 0, 0, 0.3)", borderRadius: '3px', height: '38px', width: '100%' , color:'grey'}}>
-
-<SelectPicker
-    data={data}
-    searchable={false}
-    style={{ width: "100%" ,border:"0px", color:"grey !important"}}
-    placeholder={label}
-/>
-
-</div> */}

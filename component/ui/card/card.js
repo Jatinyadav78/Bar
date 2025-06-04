@@ -10,7 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 const Card = ({ title, number, handleClick }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const Icon = title === 'request' ? requestIcon : title === 'pending' ? pendingIcon : title === 'approved' ? approvedIcon : title === 'rejected' ? rejectedIcon : title === 'closed'? closedIcon :'';
+    const Icon = title === 'request' ? requestIcon : title === 'open' ? requestIcon : title === 'pending' ? pendingIcon : title === 'approved' ? approvedIcon : title === 'rejected' ? rejectedIcon : title === 'closed'? closedIcon :'';
     const backgroundColor = title === 'request' ? '#0073FF33' : title === 'pending' ? '#FF6F061A' : title === 'approved' ? '#16B9611A' : title === 'rejected' ? '#FF0E560D' : title === 'closed'? '#4906B733' : '';
 
     const handleCardClick = async () => {

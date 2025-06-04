@@ -13,7 +13,7 @@ const roboto = Roboto({
   display: 'swap',
 })
 export const metadata: Metadata = {
-  title: 'Work Permit',
+  title: 'Safety Dashboard',
   description: 'by Thirdeye Ai',
 }
 

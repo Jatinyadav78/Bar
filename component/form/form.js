@@ -42,6 +42,7 @@ const Form = ({
   const useHookForm = { Controller, control, watch, register, errors, setValue, errorMsg, reset ,setError,
     clearErrors}
   const submit = (data) => {
+    console.log("data::",data)
     if (index === sectionLength - 2) {
       onSubmit(value);
       reset();
@@ -58,7 +59,7 @@ const Form = ({
       setErrorMsg(err.message); // Set error message if validation fails
     }
   };
-  console.log("in form")
+  // console.log("in form")
   return (
     <div id='form' className={`${Styles.section} ${Styles.active} `} >
       <form id='content' className={Styles.content} onSubmit={handleSubmit(submit)} >
@@ -126,3 +127,7 @@ const Form = ({
 }
 
 export default Form
+
+
+
+

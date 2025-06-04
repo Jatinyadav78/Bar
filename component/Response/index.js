@@ -580,8 +580,4 @@ const Index = ({ permitNumber, Id, changeFormStatus, handleCancelBtn, status, ch
     )
 }
 
-
 export default Index
-
-
-

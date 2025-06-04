@@ -11,6 +11,7 @@ export const setLocalStorage = (key, value) => {
 export const getLocalStorage = (key) => {
   try {
     const value = localStorage.getItem(key);
+    console.log(value)
     if (!value) {
       throw new Error("No key found");
     }

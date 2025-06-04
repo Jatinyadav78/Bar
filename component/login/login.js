@@ -52,7 +52,7 @@ const Login = ({ router, returnUrl }) => {
           style={{ height: "100vh", background: "#2997FD" }}
         >
           {/* Place the image here */}
-          <h3>Work Permit</h3>
+          <h3>Safety Dashboard</h3>
           <img
             src="login.svg"
             alt="Logo"

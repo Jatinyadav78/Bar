@@ -6,26 +6,17 @@
     min-width: 390px;
 }
 
-/* .dashboardDesign{
-    background: linear-gradient(129.22deg, #0073FF 12.03%, #093367 84.14%);
-    width: 100%;
-    height: 230px;
-} */
-
 .dashboardImage {
     background: linear-gradient(129.22deg, #0073FF 12.03%, #093367 84.14%);
     width: 100%;
     height: 230px;
-    /* min-width: 500px; */
 }
 
 .main {
     position: absolute;
     background: #fff;
-    /* font-family: Inter; */
     width: 95%;
     border-radius: 15px;
-    /* min-height: 70vh; */
     top: 50px;
     padding: 20px 30px;
     box-shadow: 0px 4.115942001342773px 10.289855003356934px 0px #0000000D;
@@ -52,27 +43,15 @@
     margin-top:20px;
 }
 
-.graphRequestContainer{
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    flex-wrap: wrap;
-    margin-top: 20px;
-    gap: 10px;
-}
-
 .border{
     border: 1px solid #adadad70;
     border-radius: 15px;
 }
 
 .graph{
- /* width: 500px; */
- /* height: 500px; */
- /* width: 100%; */
- height: 100%;
- box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
- padding-bottom: 12px;
+    height: 100%;
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
+    padding-bottom: 12px;
 }
 
 .graphTitle{
@@ -84,9 +63,16 @@
     margin-top: 20px;
 }
 
+.pieChartContainer {
+    padding: 20px;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .recentRequest{
     padding: 0px 30px;
-    /* width: 450px; */
     height: 466px;
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
     padding-bottom: 12px;
@@ -116,29 +102,51 @@
     top: 8px;
     gap: 10px;
     min-width: 260px;
-  }
+}
 
-  .form{
+.form{
     display: flex;
     flex-direction: column;
     gap:10px
-  }
+}
 
-  .copyBtn{
+.copyBtn{
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     justify-content: flex-end;
-  }
+}
 
-  .addImageButton {
+.addImageButton {
     position: relative;
     top: 20px;
+}
+
+.cardWrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cardActions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px;
+    margin-top: -4px;
+    margin-bottom: 8px;
 }
 
 @media(max-width: 786px) {
     .dashboardImage{
         position: relative;
         top: -50px;
+    }
+}
+
+@media(max-width: 992px) {
+    .graph {
+        width: 100% !important;
     }
 }

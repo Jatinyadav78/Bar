@@ -6,11 +6,12 @@ import DashboardDesign from '../../public/dashboardDesign.svg';
 import requestIcon from '../../public/request.svg';
 import pendingIcon from '../../public/pending.svg';
 import closedIcon from '../../public/closed.svg';
+import notFoundError from '../../public/notFoundError.svg';
 import Card from '../ui/card/card.js';
 import SafetyGraph from '../ui/graph/safetyGraph.js';
 import Request from '../request/request.js';
 import { useRouter } from 'next/navigation';
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Popover, Stack } from '@mui/material';
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Popover, Stack, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Box from '@mui/material/Box';
@@ -38,6 +39,7 @@ const SafetyDashboard = () => {
   
   const [safetyCondition, setSafetyCondition] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -136,6 +138,11 @@ const SafetyDashboard = () => {
           'Content-Type': 'application/json'
         }
       });
+
+      if (!res.ok) {
+        throw new Error('Failed to fetch safety data');
+      }
+
       const data = await res.json();
       setSafetyCondition(data);
       
@@ -193,6 +200,7 @@ const SafetyDashboard = () => {
       setLoading(false);
     } catch (error) {
       console.error('Error fetching safety data:', error);
+      setError(true);
       setLoading(false);
     }
   };
@@ -622,6 +630,30 @@ const SafetyDashboard = () => {
       </div>
     );
   };
+
+  if (error) {
+    return (
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        flexDirection: 'column',
+        gap: 2
+      }}>
+        <Image
+          src={notFoundError}
+          alt="Error"
+          width={300}
+          height={300}
+          priority
+        />
+        <Typography variant="h5" sx={{ color: '#64748b' }}>
+          Something went wrong. Please try again later.
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <div className={Styles.dashboardContainer}>

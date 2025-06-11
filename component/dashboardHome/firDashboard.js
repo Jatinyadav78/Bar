@@ -11,6 +11,9 @@ import { getLocalStorage } from '../../helperFunction/localStorage';
 import { API_URL } from '../../utils';
 import { useRouter } from 'next/navigation';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import CircularProgress from '@mui/material/CircularProgress';
+import Image from 'next/image';
+import notFoundError from '../../public/notFoundError.svg';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -23,6 +26,8 @@ const FirDashboard = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [cardLoading, setCardLoading] = useState(false);
 
   // Fetch initial data
   useEffect(() => {
@@ -298,21 +303,51 @@ const FirDashboard = () => {
   };
 
   const handleViewAllIncidents = () => {
-    // Store the current data and filters
-    localStorage.setItem('firIncidentsData', JSON.stringify(filteredData));
-    localStorage.setItem('fromFirDashboard', 'true');
-    
-    // Store date filters if they exist
-    if (startDate && endDate) {
-      localStorage.setItem('firDateFilters', JSON.stringify({
-        startDate: dayjs(startDate).format('YYYY-MM-DD'),
-        endDate: dayjs(endDate).format('YYYY-MM-DD')
-      }));
+    setCardLoading(true);
+    try {
+      // Store the current data and filters
+      localStorage.setItem('firIncidentsData', JSON.stringify(filteredData));
+      localStorage.setItem('fromFirDashboard', 'true');
+      
+      // Store date filters if they exist
+      if (startDate && endDate) {
+        localStorage.setItem('firDateFilters', JSON.stringify({
+          startDate: dayjs(startDate).format('YYYY-MM-DD'),
+          endDate: dayjs(endDate).format('YYYY-MM-DD')
+        }));
+      }
+      
+      // Navigate to the status page
+      router.push('/safety-conditions/all');
+    } catch (error) {
+      console.error('Error navigating:', error);
+      setError(true);
     }
-    
-    // Navigate to the status page
-    router.push('/safety-conditions/all');
   };
+
+  if (error) {
+    return (
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        flexDirection: 'column',
+        gap: 2
+      }}>
+        <Image
+          src={notFoundError}
+          alt="Error"
+          width={300}
+          height={300}
+          priority
+        />
+        <Typography variant="h5" sx={{ color: '#64748b' }}>
+          Something went wrong. Please try again later.
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box p={3} sx={{ backgroundColor: '#f8fafc' }}>
@@ -430,23 +465,27 @@ const FirDashboard = () => {
             <CardContent sx={{ p: 3 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Box>
-              <Typography variant="h6" sx={{ color: '#64748b', mb: 2, fontWeight: 500 }}>Total Incidents</Typography>
-              <Typography variant="h3" sx={{ 
-                color: '#4361ee', 
-                fontWeight: 700,
-                background: 'linear-gradient(45deg, #4361ee, #3f8cff)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}>{summaryMetrics.totalIncidents}</Typography>
+                  <Typography variant="h6" sx={{ color: '#64748b', mb: 2, fontWeight: 500 }}>Total Incidents</Typography>
+                  <Typography variant="h3" sx={{ 
+                    color: '#4361ee', 
+                    fontWeight: 700,
+                    background: 'linear-gradient(45deg, #4361ee, #3f8cff)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}>{summaryMetrics.totalIncidents}</Typography>
                 </Box>
-                <OpenInNewIcon sx={{ 
-                  color: '#4361ee',
-                  opacity: 0.7,
-                  transition: 'opacity 0.2s ease',
-                  '&:hover': {
-                    opacity: 1
-                  }
-                }} />
+                {cardLoading ? (
+                  <CircularProgress size={24} sx={{ color: '#4361ee' }} />
+                ) : (
+                  <OpenInNewIcon sx={{ 
+                    color: '#4361ee',
+                    opacity: 0.7,
+                    transition: 'opacity 0.2s ease',
+                    '&:hover': {
+                      opacity: 1
+                    }
+                  }} />
+                )}
               </Box>
               <Typography variant="body2" sx={{ color: '#64748b', mt: 1 }}>
                 Click to view all incidents

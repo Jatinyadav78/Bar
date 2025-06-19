@@ -737,7 +737,15 @@ const FormPlayground = ({ id, orgId, validTill }) => {
       const response = await axios.get(`v1/smart-form/form-templates/${id}`)
       const depResponse = await axios.get(`v1/departments/?organizationId=${orgId}`)
       setDepartments(depResponse?.data)
-      response.data.sections.unshift(registration)
+      
+      // Only add registration form for forms that are NOT safety or FIR forms
+      const safetyFormId = '682424d7412aa761f4cb8619';
+      const firFormId = '68246de56f19ea240cf88b12';
+      
+      if (id !== safetyFormId && id !== firFormId) {
+        response.data.sections.unshift(registration)
+      }
+      
       changeFormName(response?.data?.name)
       dispatch(formAction.updateInitialState(response.data.sections))
       setResData([{ "sectionName": "Important Terms" }, ...response.data.sections, { "sectionName": "permit" }])
@@ -842,17 +850,23 @@ const FormPlayground = ({ id, orgId, validTill }) => {
 
   const handleSubmit = async (response) => {
     const vendorState = {};
-    const filterDepartment = departments?.find(dep => dep?.name === department);
-    response[0]?.responses?.forEach(item => {
-      if (item.question && item.answer) {
-        vendorState[item.question.toLowerCase()] = item.answer;
-      }
-    });
+    const safetyFormId = '682424d7412aa761f4cb8619';
+    const firFormId = '68246de56f19ea240cf88b12';
+    
+    // Only process vendor details if it's not a safety or FIR form (i.e., registration form is present)
+    if (id !== safetyFormId && id !== firFormId) {
+      const filterDepartment = departments?.find(dep => dep?.name === department);
+      response[0]?.responses?.forEach(item => {
+        if (item.question && item.answer) {
+          vendorState[item.question.toLowerCase()] = item.answer;
+        }
+      });
+    }
     
     const reqBody = {
       vendorDetail: vendorState,
       orgId: orgId,
-      departmentId:filterDepartment?._id,
+      departmentId: id !== safetyFormId && id !== firFormId ? departments?.find(dep => dep?.name === department)?._id : null,
       formId: id,
       formName: formName,
       response: response,
@@ -911,8 +925,14 @@ const FormPlayground = ({ id, orgId, validTill }) => {
 
   useEffect(()=>{
     if(resData?.length){
-      const options = departments?.map(option => option?.name);
-      updateFieldOptions('Registration','Department',options)
+      const safetyFormId = '682424d7412aa761f4cb8619';
+      const firFormId = '68246de56f19ea240cf88b12';
+      
+      // Only update field options for registration form if it's not a safety or FIR form
+      if (id !== safetyFormId && id !== firFormId) {
+        const options = departments?.map(option => option?.name);
+        updateFieldOptions('Registration','Department',options)
+      }
     }
   },[departments])
 

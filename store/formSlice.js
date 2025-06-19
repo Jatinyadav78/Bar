@@ -41,7 +41,7 @@ const formSlice = createSlice({
             ...section,
             responses: section?.responses.map(field =>
               field?.question === action?.payload?.question
-                ? { ...field, answer: action?.payload?.answer }
+                ? { ...field, answer: action?.payload?.multiple ? [...field?.answer, ...action?.payload?.answer] : action?.payload?.answer }
                 : field
             )
           };

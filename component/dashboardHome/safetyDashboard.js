@@ -66,36 +66,6 @@ const SafetyDashboard = () => {
       ]
     }
   ]);
-  const [requestData, setRequestData] = useState([
-    {
-      permitNumber: "SA123456",
-      vendorDetail: {
-        name: "Safety Audit Team A",
-        email: "team.a@safety.com"
-      },
-      createdAt: "2024-01-15T10:30:00Z",
-      status: "pending",
-      formDetail: {
-        formName: "Monthly Safety Audit",
-      }
-    },
-    {
-      permitNumber: "SA123457", 
-      vendorDetail: {
-        name: "Safety Audit Team B",
-        email: "team.b@safety.com"
-      },
-      createdAt: "2024-01-14T09:15:00Z",
-      status: "approved",
-      formDetail: {
-        formName: "Equipment Safety Check",
-      }
-    }
-  ]);
-  const [monthlyStats, setMonthlyStats] = useState({
-    USC: { open: 15, closed: 12, pending: 3 },
-    USA: { open: 8, closed: 6, pending: 2 },
-  });
 
   // Update loading state to track both form type and status
   const [loadingStatus, setLoadingStatus] = useState({ formType: null, status: null });
@@ -122,7 +92,7 @@ const SafetyDashboard = () => {
   const fetchSafetyData = async (start = null, end = null) => {
     try {
       const token = getLocalStorage('token')?.access?.token;
-      const orgId = user?.organizationId;
+      const orgId = user?.organizationId?.[0];
       let url = `${fetchUrl}/v1/safety/safety-condition?orgId=${orgId}`;
       
       if (start) {

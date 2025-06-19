@@ -25,7 +25,7 @@ const DateAndTimePicker = ({ useForm, trigger, field, sectionName, name }) => {
         return questionObj?.answer;
     }, shallowEqual)
 
-    const referenceTime = new Date(startDate);
+    const referenceTime = startDate ? new Date(startDate) : new Date();
     const endTime = addHours(referenceTime, 24);
 
     const stateValue = useSelector((state) => {
@@ -87,7 +87,7 @@ const DateAndTimePicker = ({ useForm, trigger, field, sectionName, name }) => {
                         size='md'
                         style={{ width: '100%' }}
                         onChange={handleChange}
-                        disabled={endTimeLabel && !startDate}
+                        disabled={false}
                     />
                 </div>
                 {errors[hookFormLabel] && <FormHelperText error>{errors[hookFormLabel] ? errors[hookFormLabel].message : errorMsg}</FormHelperText>}

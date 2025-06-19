@@ -25,9 +25,6 @@ const SafetyConditionPage = ({ params }) => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [currentCardId, setCurrentCardId] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [currentImages, setCurrentImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -91,7 +88,7 @@ const SafetyConditionPage = ({ params }) => {
   const fetchFilteredData = async (start = null, end = null, formType = null, status = null) => {
     try {
       const token = getLocalStorage('token')?.access?.token;
-      const orgId = getLocalStorage('user')?.organizationId;
+      const orgId = getLocalStorage('user')?.organizationId?.[0];
       
       // Choose the correct endpoint based on source
       const endpoint = isFromFirDashboard ? 'incidence' : 'safety-condition';
@@ -243,66 +240,52 @@ const SafetyConditionPage = ({ params }) => {
     setSelectedCondition(null);
   };
 
-  const handleImageUpload = async () => {
-    if (!selectedFiles.length || !currentCardId) return;
-
-    const formData = new FormData();
-    selectedFiles.forEach((file) => {
-      formData.append('images', file);
-    });
-
-    try {
-      const token = getLocalStorage('token')?.access?.token;
-      const queryParams = new URLSearchParams({
-        type: 'safety',
-        mongoId: currentCardId
-      }).toString();
-      
-      const response = await fetch(`${API_URL}/v1/safety/upload?${queryParams}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        body: formData
+  const getImagesFromFirData = (condition) => {
+    if (!condition?.responseData) return [];
+    
+    let images = [];
+    condition.responseData.forEach(section => {
+      section.responses.forEach(response => {
+        if (response.responseType === 'profileImage' && response.answer && Array.isArray(response.answer)) {
+          images = [...images, ...response.answer];
+        }
       });
-
-      if (response.ok) {
-        setSelectedFiles([]);
-        setIsUploadModalOpen(false);
-        // You might want to refresh the card data here
-      } else {
-        console.error('Upload failed');
-      }
-    } catch (error) {
-      console.error('Error uploading images:', error);
-    }
+    });
+    return images;
   };
 
-  const handleFileSelect = (event) => {
-    setSelectedFiles(Array.from(event.target.files));
-  };
-
-  const handleOpenUploadModal = (cardId) => {
-    setCurrentCardId(cardId);
-    setIsUploadModalOpen(true);
-  };
-
-  const handleCloseUploadModal = () => {
-    setIsUploadModalOpen(false);
-    setSelectedFiles([]);
-    setCurrentCardId(null);
+  const getImagesFromSafetyData = (condition) => {
+    if (!condition?.responseData) return [];
+    
+    let images = [];
+    condition.responseData.forEach(section => {
+      section.responses.forEach(response => {
+        if (response.responseType === 'profileImage' && response.answer && Array.isArray(response.answer)) {
+          images = [...images, ...response.answer];
+        }
+      });
+    });
+    return images;
   };
 
   const handleViewImages = (condition, e) => {
     e.stopPropagation();
-    if (Array.isArray(condition.images) && condition.images.length > 0) {
-      // Add base URL to each image path
-      const imagesWithBaseUrl = condition.images.map(image => 
-        `${HOST}${image}`
-      );
-      setCurrentImages(imagesWithBaseUrl);
+    let images = [];
+    
+    if (isFromFirDashboard) {
+      images = getImagesFromFirData(condition);
+    } else {
+      // For safety conditions, extract images from responseData
+      images = getImagesFromSafetyData(condition);
+    }
+    
+    if (Array.isArray(images) && images.length > 0) {
+      setCurrentImages(images);
       setCurrentImageIndex(0);
       setIsViewModalOpen(true);
+    } else {
+      // Show alert when no images are available
+      alert('No images available for this form submission.');
     }
   };
 
@@ -361,30 +344,6 @@ const SafetyConditionPage = ({ params }) => {
 
     // Get the date from form data
     const getFormDate = () => {
-      // if (isFromFirDashboard) {
-      //   // For incident forms, look for "Date of Incident" in any section
-      //   for (const section of condition.responseData || []) {
-      //     const dateField = section.responses.find(r => r.question === "Date of Incident:");
-      //     if (dateField && dateField.answer) {
-      //       return new Date(dateField.answer).toLocaleDateString('en-US', {
-      //         month: 'short',
-      //         day: 'numeric',
-      //         year: 'numeric'
-      //       });
-      //     }
-      //   }
-      // } else {
-      //   // For safety conditions, look for "Date" in Registration section
-      //   const date = getResponseValue(registrationData, "Date");
-      //   if (date) {
-      //     return new Date(date).toLocaleDateString('en-US', {
-      //       month: 'short',
-      //       day: 'numeric',
-      //       year: 'numeric'
-      //     });
-      //   }
-      // }
-      // Fallback to createdAt if no date found in form
       return condition?.date?.split('T')[0];
     };
 
@@ -412,53 +371,53 @@ const SafetyConditionPage = ({ params }) => {
     };
 
     const statusColors = getStatusColor(condition.status);
+    const images = isFromFirDashboard ? getImagesFromFirData(condition) : getImagesFromSafetyData(condition);
 
     return (
       <Grid item xs={12} md={6} lg={4} key={condition._id}>
         <Card 
           sx={{ 
-          height: '100%',
-          backgroundColor: '#ffffff',
-          borderRadius: '16px',
-          border: '1px solid #e2e8f0',
-          boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
-          transition: 'all 0.2s ease-in-out',
-          '&:hover': {
-            transform: 'translateY(-4px)',
-            boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
-            cursor: 'pointer'
-          },
-          position: 'relative',
-          overflow: 'visible'
-        }}
-        onClick={() => handleCardClick(condition)}
+            height: '100%',
+            backgroundColor: '#ffffff',
+            borderRadius: '16px',
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              transform: 'translateY(-4px)',
+              boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
+              cursor: 'pointer'
+            },
+            position: 'relative',
+            overflow: 'visible'
+          }}
+          onClick={() => handleCardClick(condition)}
         >
           <CardContent sx={{ p: 3 }}>
-            {/* Only show status badge if not from FIR Dashboard */}
             {!isFromFirDashboard && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '1rem',
-              right: '1rem',
-              backgroundColor: statusColors.light,
-              border: `1px solid ${statusColors.border}`,
-              borderRadius: '9999px',
-              px: 2,
-              py: 0.5,
-            }}
-          >
-            <Typography
-              sx={{
-                color: statusColors.main,
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                textTransform: 'capitalize'
-              }}
-            >
-              {condition.status}
-            </Typography>
-          </Box>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '1rem',
+                  right: '1rem',
+                  backgroundColor: statusColors.light,
+                  border: `1px solid ${statusColors.border}`,
+                  borderRadius: '9999px',
+                  px: 2,
+                  py: 0.5,
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: statusColors.main,
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    textTransform: 'capitalize'
+                  }}
+                >
+                  {condition.status}
+                </Typography>
+              </Box>
             )}
 
             <Typography 
@@ -476,7 +435,6 @@ const SafetyConditionPage = ({ params }) => {
             </Typography>
 
             <Grid container spacing={2}>
-              {/* Registration Info */}
               <Grid item xs={6}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Box 
@@ -546,58 +504,18 @@ const SafetyConditionPage = ({ params }) => {
                   {getFormDate()}
                 </Typography>
               </Grid>
-
-              {/* Only show Target Date if not from FIR Dashboard */}
-              {!isFromFirDashboard && (
-              <Grid item xs={6}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box 
-                    component="span" 
-                    sx={{ 
-                      width: 6,
-                      height: 6,
-                      borderRadius: '50%',
-                      backgroundColor: '#64748b',
-                      flexShrink: 0
-                    }} 
-                  />
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
-                      color: '#64748b',
-                      fontSize: '0.875rem',
-                      fontWeight: 500
-                    }}
-                  >
-                    Target Date
-                  </Typography>
-                </Box>
-                <Typography 
-                  sx={{ 
-                    color: '#334155',
-                    fontWeight: 600,
-                    pl: 2,
-                    fontSize: '0.875rem'
-                  }}
-                >
-                  {getResponseValue(unsafeActData, "Target Date") || 'Not set'}
-                </Typography>
-              </Grid>
-              )}
             </Grid>
             
-            {/* Only show action buttons if not from FIR Dashboard */}
-            {!isFromFirDashboard && (
             <Box sx={{ display: 'flex', gap: 1, mt: 3, flexWrap: 'wrap' }}>
-              {(condition.status === 'open' || condition.status === 'pending') && (
+              {!isFromFirDashboard && (condition.status === 'open' || condition.status === 'pending') && (
                 <Button 
                   variant="contained" 
                   fullWidth
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedCondition(condition);
-                      setIsModalOpen(true);
-                    }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedCondition(condition);
+                    setIsModalOpen(true);
+                  }}
                   sx={{ 
                     py: 1,
                     backgroundColor: '#4338ca',
@@ -616,29 +534,11 @@ const SafetyConditionPage = ({ params }) => {
                 </Button>
               )}
               <Button
-                variant="contained"
-                size="medium"
-                startIcon={<AddPhotoAlternateIcon />}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleOpenUploadModal(condition._id);
-                }}
-                sx={{
-                  backgroundColor: '#0073FF',
-                  flex: '1 1 calc(50% - 4px)',
-                  '&:hover': {
-                    backgroundColor: '#0059B2'
-                  }
-                }}
-              >
-                Add Images
-              </Button>
-              <Button
                 variant="outlined"
                 size="medium"
                 startIcon={<ImageIcon />}
                 onClick={(e) => handleViewImages(condition, e)}
-                disabled={!Array.isArray(condition.images) || condition.images.length === 0}
+                disabled={images.length === 0}
                 sx={{
                   borderColor: '#0073FF',
                   color: '#0073FF',
@@ -649,10 +549,9 @@ const SafetyConditionPage = ({ params }) => {
                   }
                 }}
               >
-                View Images {Array.isArray(condition.images) && condition.images.length > 0 && `(${condition.images.length})`}
+                View Images ({images.length})
               </Button>
             </Box>
-            )}
           </CardContent>
         </Card>
       </Grid>
@@ -956,69 +855,6 @@ const SafetyConditionPage = ({ params }) => {
         </Box>
       </Modal>
 
-      {/* Image Upload Modal */}
-      <Modal
-        open={isUploadModalOpen}
-        onClose={handleCloseUploadModal}
-        aria-labelledby="upload-modal-title"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          borderRadius: 2,
-          boxShadow: 24,
-          p: 4,
-        }}>
-          <Typography variant="h6" component="h2" gutterBottom>
-            Upload Images
-          </Typography>
-          <Box sx={{ mb: 3 }}>
-            <input
-              accept="image/*"
-              type="file"
-              multiple
-              onChange={handleFileSelect}
-              style={{ display: 'none' }}
-              id="image-upload-input"
-            />
-            <label htmlFor="image-upload-input">
-              <Button
-                variant="outlined"
-                component="span"
-                startIcon={<AddPhotoAlternateIcon />}
-                fullWidth
-                sx={{ mb: 2 }}
-              >
-                Select Images
-              </Button>
-            </label>
-            {selectedFiles.length > 0 && (
-              <Typography variant="body2" color="text.secondary">
-                {selectedFiles.length} file(s) selected
-              </Typography>
-            )}
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-            <Button onClick={handleCloseUploadModal}>
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleImageUpload}
-              disabled={selectedFiles.length === 0}
-              sx={{ backgroundColor: '#0073FF' }}
-            >
-              Upload
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
-
       {/* Image View Modal */}
       <Modal
         open={isViewModalOpen}
@@ -1054,7 +890,10 @@ const SafetyConditionPage = ({ params }) => {
               mb: 1
             }}>
               <Typography variant="h6">
-                Image {currentImageIndex + 1} of {currentImages.length}
+                {currentImages.length > 0 
+                  ? `Image ${currentImageIndex + 1} of ${currentImages.length}` 
+                  : 'No Images Available'
+                }
               </Typography>
               <IconButton
                 onClick={handleCloseViewModal}
@@ -1075,7 +914,7 @@ const SafetyConditionPage = ({ params }) => {
               borderRadius: 1,
               overflow: 'hidden'
             }}>
-              {currentImages.length > 0 && (
+              {currentImages.length > 0 ? (
                 <>
                   <img
                     src={currentImages[currentImageIndex]}
@@ -1117,6 +956,22 @@ const SafetyConditionPage = ({ params }) => {
                     </>
                   )}
                 </>
+              ) : (
+                <Box sx={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  alignItems: 'center', 
+                  gap: 2,
+                  color: '#64748b'
+                }}>
+                  <AddPhotoAlternateIcon sx={{ fontSize: 64, opacity: 0.5 }} />
+                  <Typography variant="h6" sx={{ color: '#64748b' }}>
+                    No Images Available
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#94a3b8', textAlign: 'center' }}>
+                    This form submission does not contain any uploaded images.
+                  </Typography>
+                </Box>
               )}
             </Box>
 

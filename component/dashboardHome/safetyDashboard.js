@@ -76,7 +76,8 @@ const SafetyDashboard = () => {
     try {
       const token = getLocalStorage('token')?.access?.token;
       
-      const orgId = user?.organizationId?.[0]?._id;
+      // const orgId = user?.organizationId?.[0]?._id;
+      const orgId = user?.organizationId;
       let url = `${fetchUrl}/v1/safety/safety-condition?orgId=${orgId}`;
       
       if (start) {
@@ -224,7 +225,8 @@ const SafetyDashboard = () => {
   };
 
   const handleSafetyForm = () => {
-    const orgId = user?.organizationId?.[0]?._id;
+    // const orgId = user?.organizationId?.[0]?._id;
+    const orgId = user?.organizationId;
     const safetyFormId = '682424d7412aa761f4cb8619';
     const expiryDate = new Date();
     expiryDate.setMonth(expiryDate.getMonth() + 6);

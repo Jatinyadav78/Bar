@@ -48,7 +48,8 @@ const FirDashboard = () => {
   const fetchFirData = async (start = null, end = null) => {
     try {
       const token = getLocalStorage('token')?.access?.token;
-      const orgId = getLocalStorage('user')?.organizationId?.[0]?._id;
+      // const orgId = getLocalStorage('user')?.organizationId?.[0]?._id;
+      const orgId = getLocalStorage('user')?.organizationId;
       console.log(getLocalStorage('user'), 'user')
       let url = `${API_URL}/v1/safety/incidence?orgId=${orgId}`;
       
@@ -103,7 +104,8 @@ const FirDashboard = () => {
 
   // Add handleFirForm function
   const handleFirForm = () => {
-    const orgId = getLocalStorage('user')?.organizationId?.[0]?._id;
+    // const orgId = getLocalStorage('user')?.organizationId?.[0]?._id;
+    const orgId = getLocalStorage('user')?.organizationId;
     const firFormId = '68246de56f19ea240cf88b12';
     const expiryDate = new Date();
     expiryDate.setMonth(expiryDate.getMonth() + 6);

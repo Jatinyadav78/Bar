@@ -88,7 +88,8 @@ const SafetyConditionPage = ({ params }) => {
   const fetchFilteredData = async (start = null, end = null, formType = null, status = null) => {
     try {
       const token = getLocalStorage('token')?.access?.token;
-      const orgId = getLocalStorage('user')?.organizationId?.[0]?._id;
+      // const orgId = getLocalStorage('user')?.organizationId?.[0]?._id;
+      const orgId = getLocalStorage('user')?.organizationId;
       
       // Choose the correct endpoint based on source
       const endpoint = isFromFirDashboard ? 'incidence' : 'safety-condition';

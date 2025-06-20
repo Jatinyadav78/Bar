@@ -481,7 +481,7 @@ const SafetyDashboard = () => {
         <div style={{
           backgroundColor: '#ffffff',
           borderRadius: '12px',
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
           padding: '12px',
           height: '100%'
         }}>
@@ -621,7 +621,7 @@ const SafetyDashboard = () => {
       />
       <div className={Styles.main}>
         <div className={Styles.header}>
-          <div className={Styles.title}></div>
+          <div className={Styles.title}>Unsafe Acts/Unsafe Conditions</div>
           <div className={Styles.headerControls} style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
             <Button
               variant="contained"
@@ -700,11 +700,11 @@ const SafetyDashboard = () => {
 
         <Box sx={{ width: '100%', typography: 'body1' }}>
           <TabContext value={tabValue}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            {/* <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <TabList onChange={handleTabChange} aria-label="safety dashboard tabs">
                 <Tab label="Overview" value="1" />
               </TabList>
-            </Box>
+            </Box> */}
 
             <TabPanel value="1">
               <div className="row">

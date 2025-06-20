@@ -160,7 +160,7 @@ const DashboardHome = () => {
         />
         <div className={Styles.main}>
           <div className={Styles.header}>
-            <div className={Styles.title}></div>
+            <div className={Styles.title}>Work Permit</div>
             <div className='d-flex'>
               <div style={{ color: 'black', marginRight: '10px' }}>
                 <IconButton aria-label="qrScanner" style={{color:'black',position:'relative', bottom:'8px'}} onClick={()=> router.push('/scanner')}>

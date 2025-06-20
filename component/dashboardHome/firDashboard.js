@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Styles from './dashboardHome.module.css';
+import DashboardDesign from '../../public/dashboardDesign.svg';
 import dynamic from 'next/dynamic';
 import { Box, Grid, Card, CardContent, Typography, Button, Stack, Popover } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -354,9 +356,11 @@ const FirDashboard = () => {
   }
 
   return (
-    <Box p={3} sx={{ backgroundColor: '#f8fafc' }}>
+    <div className={Styles.dashboardContainer}>
+      <Image className={Styles.dashboardImage} priority src={DashboardDesign} alt="submitted" />
+      <Box p={3} sx={{ backgroundColor: '#f8fafc' }} className={Styles.main} >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4" gutterBottom sx={{ color: '#2c3e50', fontWeight: 600 }}>
+        <Typography className={Styles.title} variant="h4" gutterBottom sx={{ color: '#2c3e50', fontWeight: 600 }}>
           FIR Dashboard Analytics
         </Typography>
         <Stack direction="row" spacing={2}>
@@ -653,6 +657,8 @@ const FirDashboard = () => {
         </>
       )}
     </Box>
+    </div>
+    
   );
 };
 

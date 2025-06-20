@@ -69,7 +69,7 @@ const ProfileImage = ({ useForm, trigger, field, sectionName, name }) => {
         const response = await addImage(file); ['', '']
         let answer; 
         if(sectionName === 'Registration') answer = api + response?.data;
-        else answer = api + response?.data?.data;
+        else answer = response?.data?.data;
         console.log(response, 'response');
         uploadedFiles.push(answer);
       }
@@ -83,6 +83,9 @@ const ProfileImage = ({ useForm, trigger, field, sectionName, name }) => {
       name ? dispatch(formAction.updateMatrixField({ name, sectionName, question, answer: uploadedFiles })) :
           dispatch(formAction.updateField({ sectionName, question, answer: uploadedFiles, multiple }));
     } catch (error) {
+
+
+
 
     // let errorMessage = "An error occured while processing the image. Please try again.",
 

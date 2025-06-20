@@ -44,28 +44,11 @@ const SafetyDashboard = () => {
   const [endDate, setEndDate] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [tabValue, setTabValue] = useState('1');
-  const [graphXdata, setGraphXdata] = useState(['USC', 'USA']);
-  const [graphWorkers, setGraphWorkers] = useState([0, 0]);
-  const [graphStaff, setGraphStaff] = useState([0, 0]);
+  const [graphXdata, setGraphXdata] = useState([]);
+  const [graphWorkers, setGraphWorkers] = useState([]);
+  const [graphStaff, setGraphStaff] = useState([]);
   const [areaIncidents, setAreaIncidents] = useState([]);
-  const [cardObj, setCardObj] = useState([
-    { 
-      type: 'USC',
-      statuses: [
-        { status: 'open', count: 0 },
-        { status: 'closed', count: 0 },
-        { status: 'pending', count: 0 }
-      ]
-    },
-    { 
-      type: 'USA',
-      statuses: [
-    { status: 'open', count: 0 },
-    { status: 'closed', count: 0 },
-    { status: 'pending', count: 0 }
-      ]
-    }
-  ]);
+  const [cardObj, setCardObj] = useState([]);
 
   // Update loading state to track both form type and status
   const [loadingStatus, setLoadingStatus] = useState({ formType: null, status: null });
@@ -92,7 +75,8 @@ const SafetyDashboard = () => {
   const fetchSafetyData = async (start = null, end = null) => {
     try {
       const token = getLocalStorage('token')?.access?.token;
-      const orgId = user?.organizationId?.[0];
+      
+      const orgId = user?.organizationId?.[0]?._id;
       let url = `${fetchUrl}/v1/safety/safety-condition?orgId=${orgId}`;
       
       if (start) {
@@ -240,7 +224,7 @@ const SafetyDashboard = () => {
   };
 
   const handleSafetyForm = () => {
-    const orgId = user?.organizationId;
+    const orgId = user?.organizationId?.[0]?._id;
     const safetyFormId = '682424d7412aa761f4cb8619';
     const expiryDate = new Date();
     expiryDate.setMonth(expiryDate.getMonth() + 6);

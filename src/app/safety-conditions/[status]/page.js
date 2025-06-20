@@ -88,7 +88,7 @@ const SafetyConditionPage = ({ params }) => {
   const fetchFilteredData = async (start = null, end = null, formType = null, status = null) => {
     try {
       const token = getLocalStorage('token')?.access?.token;
-      const orgId = getLocalStorage('user')?.organizationId?.[0];
+      const orgId = getLocalStorage('user')?.organizationId?.[0]?._id;
       
       // Choose the correct endpoint based on source
       const endpoint = isFromFirDashboard ? 'incidence' : 'safety-condition';
@@ -251,6 +251,7 @@ const SafetyConditionPage = ({ params }) => {
         }
       });
     });
+    images = images?.map(img=>API_URL + img);
     return images;
   };
 
@@ -265,6 +266,7 @@ const SafetyConditionPage = ({ params }) => {
         }
       });
     });
+    images = images?.map(img=>API_URL + img);
     return images;
   };
 
@@ -584,75 +586,109 @@ const SafetyConditionPage = ({ params }) => {
   const renderModalContent = () => {
     if (!selectedCondition) return null;
 
-      // Render FIR form details
-      return selectedCondition.responseData.map((section, index) => (
-        <Box 
-          key={index}
-          sx={{ 
-            mb: 2.5,
-            p: 3,
-            backgroundColor: index % 2 === 0 ? '#f8fafc' : '#ffffff',
-            borderRadius: '16px',
-            border: '1px solid #e2e8f0',
-            transition: 'all 0.2s ease-in-out',
-            '&:hover': {
-              borderColor: '#cbd5e1',
-              transform: 'translateX(4px)',
-              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)'
-            }
-          }}
-        >
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              color: '#1e293b',
-              fontWeight: 600,
+    // Collect all images for the selected condition
+    const images = isFromFirDashboard ? getImagesFromFirData(selectedCondition) : getImagesFromSafetyData(selectedCondition);
+    // Render FIR form details, filtering out Upload Image and Profile Image sections
+    return (
+      <>
+        {/* View Image button at the top if images exist */}
+        {images.length > 0 && (
+          <Button
+            variant="outlined"
+            size="medium"
+            startIcon={<ImageIcon />}
+            onClick={() => {
+              setCurrentImages(images);
+              setCurrentImageIndex(0);
+              setIsViewModalOpen(true);
+            }}
+            sx={{
+              borderColor: '#0073FF',
+              color: '#0073FF',
               mb: 2,
-              borderBottom: '2px solid #f1f5f9',
-              pb: 1
+              '&:hover': {
+                borderColor: '#0059B2',
+                backgroundColor: 'rgba(0, 115, 255, 0.04)'
+              }
             }}
           >
-            {section.sectionName}
-          </Typography>
-          {section.responses.map((response, rIndex) => (
-            <Box key={rIndex} sx={{ mb: 2 }}>
+            View Images ({images.length})
+          </Button>
+        )}
+        {selectedCondition.responseData
+          .filter(section => section.sectionName !== 'Upload Image' && section.sectionName !== 'Profile Image')
+          .map((section, index) => (
+            <Box 
+              key={index}
+              sx={{ 
+                mb: 2.5,
+                p: 3,
+                backgroundColor: index % 2 === 0 ? '#f8fafc' : '#ffffff',
+                borderRadius: '16px',
+                border: '1px solid #e2e8f0',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  borderColor: '#cbd5e1',
+                  transform: 'translateX(4px)',
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)'
+                }
+              }}
+            >
               <Typography 
-                variant="subtitle1" 
+                variant="h6" 
                 sx={{ 
-                  color: '#475569',
-                  fontSize: '0.9375rem',
+                  color: '#1e293b',
                   fontWeight: 600,
-                  mb: 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1.5
+                  mb: 2,
+                  borderBottom: '2px solid #f1f5f9',
+                  pb: 1
                 }}
               >
-                <Box 
-                  component="span" 
-                  sx={{ 
-                    width: 8,
-                    height: 8,
-                    borderRadius: '50%',
-                    backgroundColor: '#4338ca',
-                    flexShrink: 0
-                  }} 
-                />
-                {response.question}
+                {section.sectionName}
               </Typography>
-              <Typography 
-                sx={{ 
-                  color: '#334155',
-                  fontWeight: 500,
-                  pl: 3
-                }}
-              >
-                {response.answer || 'N/A'}
-              </Typography>
+              {section.responses
+                .filter(response => response.question !== 'Upload Image' && response.question !== 'Profile Image')
+                .map((response, rIndex) => (
+                  <Box key={rIndex} sx={{ mb: 2 }}>
+                    <Typography 
+                      variant="subtitle1" 
+                      sx={{ 
+                        color: '#475569',
+                        fontSize: '0.9375rem',
+                        fontWeight: 600,
+                        mb: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1.5
+                      }}
+                    >
+                      <Box 
+                        component="span" 
+                        sx={{ 
+                          width: 8,
+                          height: 8,
+                          borderRadius: '50%',
+                          backgroundColor: '#4338ca',
+                          flexShrink: 0
+                        }} 
+                      />
+                      {response.question}
+                    </Typography>
+                    <Typography 
+                      sx={{ 
+                        color: '#334155',
+                        fontWeight: 500,
+                        pl: 3
+                      }}
+                    >
+                      {response.answer || 'N/A'}
+                    </Typography>
+                  </Box>
+                ))}
             </Box>
           ))}
-        </Box>
-      ));
+      </>
+    );
   };
 
   const handleBackToDashboard = () => {
